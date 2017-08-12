@@ -8,7 +8,7 @@ const TodoList = ({ onClick, todos }) => {
   return (
     <ul>
       {todos.map((t) => (
-        <li key={t.id} onClick={() => onClick(t.id)} style={{ textDecoration: t.complete ? 'line-through' : 'none' }}>
+        <li key={t.id} onClick={() => onClick(t.id)} style={{ textDecoration: t.completed ? 'line-through' : 'none' }}>
           {t.text}
         </li>
       ))}
@@ -18,7 +18,13 @@ const TodoList = ({ onClick, todos }) => {
 
 TodoList.propTypes = {
   onClick: PropTypes.func.isRequired,
-  todos: PropTypes.array.isRequired
+  todos: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      completed: PropTypes.bool.isRequired,
+      text: PropTypes.string.isRequired
+    }).isRequired
+  ).isRequired
 };
 
 // container
@@ -27,9 +33,9 @@ const filterTodos = (todos, filter) => {
     case 'all':
       return todos;
     case 'uncompleted':
-      return todos.filter((t) => !t.complete);
+      return todos.filter((t) => !t.completed);
     case 'completed':
-      return todos.filter((t) => t.complete);
+      return todos.filter((t) => t.completed);
     default:
       throw new Error('Unknown filter: ' + filter);
   }

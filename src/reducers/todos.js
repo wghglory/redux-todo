@@ -6,7 +6,7 @@ const todo = (state = {}, action) => {
       return {
         id: action.id,
         text: action.text,
-        complete: false
+        completed: action.completed
       };
     case TOOGLE_TODO:
       if (state.id !== action.id) {
@@ -15,7 +15,7 @@ const todo = (state = {}, action) => {
 
       return {
         ...state,
-        complete: !state.complete
+        completed: !state.completed
       };
     default:
       return state;

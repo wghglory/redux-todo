@@ -5,7 +5,8 @@ export const addTodo = (value) => {
   return {
     id: nextId++,
     type: ADD_TODO,
-    text: value
+    text: value,
+    completed: false
   };
 };
 

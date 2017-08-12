@@ -22,9 +22,11 @@ const FilterLink = ({ onClick, active, children }) => {
 FilterLink.propTypes = {
   onClick: PropTypes.func.isRequired,
   active: PropTypes.bool.isRequired,
-  children: PropTypes.string
+  children: PropTypes.node
 };
 
+// container
+// ownProps: container's prop, in this case: filter of <FilterLink filter="all">
 const mapStateToProps = (state, ownProps) => {
   return {
     active: state.visibilityFilter === ownProps.filter
