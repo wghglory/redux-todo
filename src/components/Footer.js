@@ -6,13 +6,31 @@ import PropTypes from 'prop-types';
 const Footer = ({ onClick }) => {
   return (
     <p>
-      <a href="#" onClick={() => onClick('all')}>
+      <a
+        href="#"
+        onClick={(e) => {
+          e.preventDefault();
+          onClick('all');
+        }}
+      >
         All
       </a>{' '}
-      <a href="#" onClick={() => onClick('uncompleted')}>
+      <a
+        href="#"
+        onClick={(e) => {
+          e.preventDefault();
+          onClick('uncompleted');
+        }}
+      >
         Uncompleted
       </a>{' '}
-      <a href="#" onClick={() => onClick('completed')}>
+      <a
+        href="#"
+        onClick={(e) => {
+          e.preventDefault();
+          onClick('completed');
+        }}
+      >
         Completed
       </a>
     </p>
@@ -23,6 +41,7 @@ Footer.propTypes = {
   onClick: PropTypes.func.isRequired
 };
 
+// container
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onClick: (filter) => {

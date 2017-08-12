@@ -22,7 +22,6 @@ TodoList.propTypes = {
 };
 
 // container
-
 const filterTodos = (todos, filter) => {
   switch (filter) {
     case 'all':
