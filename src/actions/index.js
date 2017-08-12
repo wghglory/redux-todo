@@ -1,4 +1,4 @@
-import { addTodo, toogleTodo } from './todos';
+import { addTodo, toggleTodo } from './todos';
 import { setVisibilityFilter } from './visibilityFilter';
 
-export { addTodo, toogleTodo, setVisibilityFilter };
+export { addTodo, toggleTodo, setVisibilityFilter };

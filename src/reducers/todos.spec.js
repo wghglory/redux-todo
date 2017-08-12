@@ -10,7 +10,8 @@ describe('todos reducer', () => {
       todos([], {
         type: 'ADD_TODO',
         text: 'Run the tests',
-        id: 0
+        id: 0,
+        completed: false
       })
     ).toEqual([
       {
@@ -32,7 +33,8 @@ describe('todos reducer', () => {
         {
           type: 'ADD_TODO',
           text: 'Use Redux',
-          id: 1
+          id: 1,
+          completed: false
         }
       )
     ).toEqual([
@@ -65,7 +67,8 @@ describe('todos reducer', () => {
         {
           type: 'ADD_TODO',
           text: 'Fix the tests',
-          id: 2
+          id: 2,
+          completed: false
         }
       )
     ).toEqual([

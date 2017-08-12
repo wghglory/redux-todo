@@ -1,4 +1,4 @@
-import { ADD_TODO, TOOGLE_TODO } from '../constants/index';
+import { ADD_TODO, TOGGLE_TODO } from '../constants/index';
 
 const todo = (state = {}, action) => {
   switch (action.type) {
@@ -8,7 +8,7 @@ const todo = (state = {}, action) => {
         text: action.text,
         completed: action.completed
       };
-    case TOOGLE_TODO:
+    case TOGGLE_TODO:
       if (state.id !== action.id) {
         return state;
       }
@@ -26,7 +26,7 @@ const todos = (state = [], action) => {
   switch (action.type) {
     case ADD_TODO:
       return [ ...state, todo(undefined, action) ];
-    case TOOGLE_TODO:
+    case TOGGLE_TODO:
       return state.map((t) => todo(t, action));
     default:
       return state;

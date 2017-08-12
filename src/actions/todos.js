@@ -1,4 +1,4 @@
-import { ADD_TODO, TOOGLE_TODO } from '../constants/index';
+import { ADD_TODO, TOGGLE_TODO } from '../constants/index';
 
 let nextId = 0;
 export const addTodo = (value) => {
@@ -10,9 +10,9 @@ export const addTodo = (value) => {
   };
 };
 
-export const toogleTodo = (id) => {
+export const toggleTodo = (id) => {
   return {
-    type: TOOGLE_TODO,
+    type: TOGGLE_TODO,
     id
   };
 };
