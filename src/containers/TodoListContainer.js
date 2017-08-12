@@ -2,7 +2,9 @@ import { toggleTodo } from '../actions/index';
 import { connect } from 'react-redux';
 import TodoList from '../components/TodoList';
 import { withRouter } from 'react-router-dom';
+import { getVisibleTodos } from '../reducers';
 
+/* // moved to reducer file
 const filterTodos = (todos, filter) => {
   switch (filter) {
     case 'all':
@@ -15,11 +17,12 @@ const filterTodos = (todos, filter) => {
       throw new Error('Unknown filter: ' + filter);
   }
 };
+*/
 
 const mapStateToProps = (state, ownProps) => {
   return {
     // todos: filterTodos(state.todos, ownProps.filter)  // pass from container
-    todos: filterTodos(state.todos, ownProps.match.params.filter || 'all') // pass from withRouter
+    todos: getVisibleTodos(state, ownProps.match.params.filter || 'all') // pass from withRouter
   };
 };
 
