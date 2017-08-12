@@ -1,25 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { NavLink } from 'react-router-dom';
 
-const FilterLink = ({ onClick, active, children }) => {
-  return active ? (
-    <span>{children}</span>
-  ) : (
-    <a
-      href="#"
-      onClick={(e) => {
-        e.preventDefault();
-        onClick();
+const FilterLink = ({ filter, children }) => {
+  return (
+    <NavLink
+      exact
+      to={filter === 'all' ? '/' : `/${filter}`}
+      activeStyle={{
+        textDecoration: 'none',
+        color: 'red'
       }}
+      style={{ margin: '0 4px' }}
     >
       {children}
-    </a>
+    </NavLink>
   );
 };
 
 FilterLink.propTypes = {
-  onClick: PropTypes.func.isRequired,
-  active: PropTypes.bool.isRequired,
+  filter: PropTypes.oneOf([ 'all', 'completed', 'uncompleted' ]).isRequired,
   children: PropTypes.node
 };
 
