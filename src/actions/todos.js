@@ -1,8 +1,8 @@
 import { ADD_TODO, TOGGLE_TODO } from '../constants/index';
+import { v4 } from 'node-uuid';
 
-let nextId = 0;
 export const addTodo = (value) => ({
-  id: nextId++,
+  id: v4(),
   type: ADD_TODO,
   text: value,
   completed: false
