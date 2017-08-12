@@ -25,3 +25,4 @@ Great notes at <https://github.com/tayiorbeii/egghead.io_idiomatic_redux_course_
 
 - [Filtering Redux State with react-router-dom v4](./docs/react-router-dom.md)
 - [Using withRouter() to Inject the Params into Connected Components](./docs/withRouter.md)
+- [Using mapDispatchToProps() Shorthand Notation](./mapDispatchToProps.md)
