@@ -2,18 +2,11 @@ import React from 'react';
 import { toogleTodo } from '../actions/index';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Todo from './Todo';
 
 // present
 const TodoList = ({ onClick, todos }) => {
-  return (
-    <ul>
-      {todos.map((t) => (
-        <li key={t.id} onClick={() => onClick(t.id)} style={{ textDecoration: t.completed ? 'line-through' : 'none' }}>
-          {t.text}
-        </li>
-      ))}
-    </ul>
-  );
+  return <ul>{todos.map((t) => <Todo key={t.id} {...t} onClick={onClick} />)}</ul>;
 };
 
 TodoList.propTypes = {
