@@ -22,6 +22,8 @@ const AddTodo = () => {
 
 export default AddTodo; */
 
+// this file is too simple to extract
+
 import React from 'react';
 import { addTodo } from '../actions/index';
 import { connect } from 'react-redux';
@@ -35,6 +37,7 @@ const AddTodo = ({ dispatch }) => {
       <input type="text" ref={(ele) => (input = ele)} />
       <button
         onClick={() => {
+          if (input.value.trim() === '') return;
           dispatch(addTodo(input.value));
           input.value = '';
         }}
