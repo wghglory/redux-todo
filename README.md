@@ -31,3 +31,4 @@ npm start
 - [16. Wrapping `dispatch()` to Recognize Promises](./docs/16_wrapping_dispatch_to_recognize_promises.md)
 - [17. The Middleware Chain](./docs/17_middleware_chain.md)
 - [18. Applying Redux Middleware](./docs/18_applying_redux_middleware.md)
+- [19. Updating the State with the Fetched Data](./docs/19_updating_state_with_fetched_data.md)

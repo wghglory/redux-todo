@@ -1,19 +1,5 @@
-import { ADD_TODO, TOGGLE_TODO } from '../constants/index';
+import { RECEIVE_TODOS } from '../constants/index';
 import { combineReducers } from 'redux';
-import todo from './todo';
-
-/* 
-// when we only have 1 array of todos
-const todos = (state = [], action) => {
-  switch (action.type) {
-    case ADD_TODO:
-      return [ ...state, todo(undefined, action) ];
-    case TOGGLE_TODO:
-      return state.map((t) => todo(t, action));
-    default:
-      return state;
-  }
-}; */
 
 /* state structure for byId
 todos:{
@@ -25,57 +11,68 @@ todos:{
 }
  */
 const byId = (state = {}, action) => {
+  const nextState = { ...state };
   switch (action.type) {
-    case ADD_TODO:
-    case TOGGLE_TODO:
-      return {
-        ...state,
-        [action.id]: todo(state[action.id], action)
-      };
+    case RECEIVE_TODOS:
+      action.response.forEach((todo) => {
+        nextState[todo.id] = todo;
+      });
+      return nextState;
     default:
       return state;
   }
 };
 
-/**
- * state structure: todos: { allIds: [ '213123', '123213', '123231' ] }
- * @param {array of ids} state 
- * @param {*} action 
- */
 const allIds = (state = [], action) => {
+  if (action.filter !== 'all') {
+    return state;
+  }
   switch (action.type) {
-    case ADD_TODO:
-      return [ ...state, action.id ];
+    case RECEIVE_TODOS:
+      return action.response.map((todo) => todo.id);
     default:
       return state;
   }
 };
+
+const uncompletedIds = (state = [], action) => {
+  if (action.filter !== 'uncompleted') {
+    return state;
+  }
+  switch (action.type) {
+    case RECEIVE_TODOS:
+      return action.response.map((todo) => todo.id);
+    default:
+      return state;
+  }
+};
+
+const completedIds = (state = [], action) => {
+  if (action.filter !== 'completed') {
+    return state;
+  }
+  switch (action.type) {
+    case RECEIVE_TODOS:
+      return action.response.map((todo) => todo.id);
+    default:
+      return state;
+  }
+};
+
+const idsByFilter = combineReducers({
+  all: allIds,
+  uncompleted: uncompletedIds,
+  completed: completedIds
+});
 
 const todos = combineReducers({
   byId,
-  allIds
+  idsByFilter
 });
 
 export default todos;
 
-// create an array of todos. Note convention: reducerName = state.key
-const getAllTodos = (state) => state.allIds.map((id) => state.byId[id]);
-
-/**
- * 
- * @param {} state : just state of redux, no any guess like array or object
- * @param {*} filter 
- */
 export const getVisibleTodos = (state, filter) => {
-  const allTodos = getAllTodos(state); // array of all todos
-  switch (filter) {
-    case 'all':
-      return allTodos;
-    case 'uncompleted':
-      return allTodos.filter((t) => !t.completed);
-    case 'completed':
-      return allTodos.filter((t) => t.completed);
-    default:
-      throw new Error('Unknown filter: ' + filter);
-  }
+  const ids = state.idsByFilter[filter];
+  return ids.map((id) => state.byId[id]);
 };
