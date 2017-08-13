@@ -17,3 +17,4 @@ npm start
 
 - [01. Simplifying with the Arrow Functions](./docs/01_arrow_func.md)
 - [02. Supplying the Initial State](./docs/02_initial_state.md)
+- [03. Persisting State in Local Storage](./docs/03_persisting_state_in_local_storage.md)
