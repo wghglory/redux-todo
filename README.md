@@ -16,3 +16,4 @@ npm start
 ## Table of Contents
 
 - [01. Simplifying with the Arrow Functions](./docs/01_arrow_func.md)
+- [02. Supplying the Initial State](./docs/02_initial_state.md)
