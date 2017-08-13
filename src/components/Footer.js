@@ -55,14 +55,14 @@ export default connect(null, mapDispatchToProps)(Footer);
 */
 
 import React from 'react';
-import FilterLinkContainer from '../containers/FilterLinkContainer';
+import FilterLink from './FilterLink';
 
 const Footer = () => {
   return (
     <p>
-      <FilterLinkContainer filter="all">All</FilterLinkContainer>{' '}
-      <FilterLinkContainer filter="uncompleted">Uncompleted</FilterLinkContainer>{' '}
-      <FilterLinkContainer filter="completed">Completed</FilterLinkContainer>
+      <FilterLink filter="all">All</FilterLink>
+      <FilterLink filter="uncompleted">Uncompleted</FilterLink>
+      <FilterLink filter="completed">Completed</FilterLink>
     </p>
   );
 };

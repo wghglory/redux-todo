@@ -1,4 +1,6 @@
-import { setVisibilityFilter } from '../actions/visibilityFilter';
+// not needed since FilterLink uses react-router-dom. It's now the truth of source instead of redux state
+
+/* import { setVisibilityFilter } from '../actions/visibilityFilter';
 import { connect } from 'react-redux';
 import FilterLink from '../components/FilterLink';
 
@@ -14,3 +16,4 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FilterLink);
+ */

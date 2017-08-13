@@ -17,7 +17,7 @@ const filterTodos = (todos, filter) => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    todos: filterTodos(state.todos, state.visibilityFilter)
+    todos: filterTodos(state.todos, ownProps.filter)
   };
 };
 

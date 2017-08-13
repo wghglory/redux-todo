@@ -3,10 +3,10 @@ import AddTodo from '../containers/AddTodo';
 import TodoListContainer from '../containers/TodoListContainer';
 import Footer from './Footer';
 
-export default () => (
+export default (props) => (
   <div>
     <AddTodo />
-    <TodoListContainer />
+    <TodoListContainer filter={props.match.params.filter || 'all'} />
     <Footer />
   </div>
 );
