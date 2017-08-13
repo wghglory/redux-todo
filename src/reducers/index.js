@@ -1,14 +1,21 @@
 import { combineReducers } from 'redux';
-import todos, * as fromTodos from './todos';
-// import visibilityFilter from './visibilityFilter';  // not needed because of using react-router-dom
+import byId, * as fromById from './byId';
+import createList, * as fromList from './createList';
 
-// convention: reducer name === state key
-const todoApp = combineReducers({
-  todos
-  // visibilityFilter
+const listByFilter = combineReducers({
+  all: createList('all'),
+  uncompleted: createList('uncompleted'),
+  completed: createList('completed')
 });
 
-export default todoApp;
+const todos = combineReducers({
+  byId,
+  listByFilter
+});
 
-// here, very easy to know state structure for `selectors` by looking at reducer's name(same with store key)
-export const getVisibleTodos = (state, filter) => fromTodos.getVisibleTodos(state.todos, filter);
+export default todos;
+
+export const getVisibleTodos = (state, filter) => {
+  const ids = fromList.getIds(state.listByFilter[filter]);
+  return ids.map((id) => fromById.getTodo(state.byId, id));
+};

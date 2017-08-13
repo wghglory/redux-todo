@@ -32,3 +32,4 @@ npm start
 - [17. The Middleware Chain](./docs/17_middleware_chain.md)
 - [18. Applying Redux Middleware](./docs/18_applying_redux_middleware.md)
 - [19. Updating the State with the Fetched Data](./docs/19_updating_state_with_fetched_data.md)
+- [20. Refactoring the Reducers](./docs/20_refactoring_reducers.md)
