@@ -22,4 +22,4 @@ npm start
 - [05-07. react-router-dom v4](./docs/05-07_react-router-dom.md)
 - [08. withRouter](./docs/08_withRouter.md)
 - [09. Using mapDispatchToProps() Shorthand Notation](./docs/09_mapDispatchToProps_shorthand.md)
-- [10. Colocating Selectors with reducers](./docs/09_selectors.md)
+- [10. Colocating Selectors with reducers](./docs/10_selectors.md)
