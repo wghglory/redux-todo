@@ -6,6 +6,22 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import { loadState, saveState } from './localStorage';
 import throttle from 'lodash/throttle';
 
+const addLoggingToDispatch = (store) => {
+  const rawDispatch = store.dispatch;
+  if (!console.group) {
+    return rawDispatch;
+  }
+  return (action) => {
+    console.group(action.type);
+    console.log('%c prev state', 'color: gray', store.getState());
+    console.log('%c action', 'color: blue', action);
+    const returnValue = rawDispatch(action);
+    console.log('%c next state', 'color: green', store.getState());
+    console.groupEnd(action.type);
+    return returnValue;
+  };
+};
+
 const configureStore = () => {
   const persistedState = loadState();
   const store = createStore(
@@ -16,6 +32,10 @@ const configureStore = () => {
       // other store enhancers if any
     )
   );
+
+  if (process.env.NODE_ENV !== 'production') {
+    store.dispatch = addLoggingToDispatch(store);
+  }
 
   // throttle will make sure saveState won't be called more than 1 second. we don't want this expensive function executes too frequently
   store.subscribe(

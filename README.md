@@ -24,3 +24,4 @@ npm start
 - [09. Using mapDispatchToProps() Shorthand Notation](./docs/09_mapDispatchToProps_shorthand.md)
 - [10. Colocating Selectors with reducers](./docs/10_selectors.md)
 - [11. Normalizing the State shape](./docs/11_normalize_state_shape.md)
+- [12. Wrapping `dispatch()` to Log Actions](./docs/12_logger.md)
