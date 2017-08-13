@@ -2,7 +2,9 @@ import { toggleTodo } from '../actions/index';
 import { connect } from 'react-redux';
 import TodoList from '../components/TodoList';
 import { withRouter } from 'react-router-dom';
+import { getVisibleTodos } from '../reducers';
 
+/* // moved to reducer file
 const filterTodos = (todos, filter) => {
   switch (filter) {
     case 'all':
@@ -15,10 +17,16 @@ const filterTodos = (todos, filter) => {
       throw new Error('Unknown filter: ' + filter);
   }
 };
+*/
 
+/* If store structure changes, have to remember to update filterTodos(state.todos), not good
+ * getVisibleTodos selector should internally decide what it needs
+ * since reducer knows the store structure, selector should be put in same place with reducer
+ *  */
 const mapStateToProps = (state, ownProps) => {
   return {
-    todos: filterTodos(state.todos, ownProps.match.params.filter || 'all')
+    // todos: filterTodos(state.todos, ownProps.filter)  // pass from container
+    todos: getVisibleTodos(state, ownProps.match.params.filter || 'all') // pass from withRouter
   };
 };
 

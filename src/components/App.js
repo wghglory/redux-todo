@@ -6,6 +6,7 @@ import Footer from './Footer';
 export default () => (
   <div>
     <AddTodo />
+    {/* Use withRouter below instead of <TodoListContainer filter={props.match.params.filter || 'all'} />*/}
     <TodoListContainer />
     <Footer />
   </div>
