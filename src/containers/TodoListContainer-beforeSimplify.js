@@ -1,4 +1,4 @@
-import * as actions from '../actions/index';
+import { toggleTodo, receiveTodos } from '../actions/index';
 import { connect } from 'react-redux';
 import TodoList from '../components/TodoList';
 import { withRouter } from 'react-router-dom';
@@ -23,8 +23,6 @@ const filterTodos = (todos, filter) => {
 // add new class because we need fetchTodo Async call
 import React, { Component } from 'react';
 import { fetchTodos } from '../api';
-import { setVisibilityFilter } from '../actions/visibilityFilter';
-import { addTodo } from '../actions/todos';
 
 class VisibleTodoList extends Component {
   componentDidMount() {
@@ -47,28 +45,13 @@ class VisibleTodoList extends Component {
   }
 
   render() {
-    console.log(this.props);
-    /**
-      addTodo:ƒ ()
-      filter:"completed"
-      history:{length: 50, action: "POP", location: {…}, createHref: ƒ, push: ƒ, …}
-      location:{pathname: "/completed", search: "", hash: "", state: undefined, key: "0zq0n7"}
-      match:{path: "/:filter?", url: "/completed", isExact: true, params: {…}}
-      receiveTodos:ƒ ()
-      setVisibilityFilter:ƒ ()
-      staticContext:undefined
-      todos:[]
-      toggleTodo:ƒ ()
-     */
-    const { toggleTodo, ...rest } = this.props;
-    return <TodoList {...rest} onClick={toggleTodo} />;
+    return <TodoList {...this.props} />;
   }
 }
 
 VisibleTodoList.propTypes = {
   filter: PropTypes.string.isRequired,
-  receiveTodos: PropTypes.func.isRequired,
-  toggleTodo: PropTypes.func.isRequired
+  receiveTodos: PropTypes.func.isRequired
 };
 
 /* If store structure changes, have to remember to update filterTodos(state.todos), not good
@@ -96,4 +79,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 }; */
 
 // export default withRouter(connect(mapStateToProps, mapDispatchToProps)(TodoList));
-export default withRouter(connect(mapStateToProps, actions)(VisibleTodoList));
+export default withRouter(connect(mapStateToProps, { onClick: toggleTodo, receiveTodos })(VisibleTodoList));

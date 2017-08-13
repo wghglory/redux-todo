@@ -1,4 +1,4 @@
-import { ADD_TODO, TOGGLE_TODO } from '../constants/index';
+import { ADD_TODO, TOGGLE_TODO, RECEIVE_TODOS } from '../constants/index';
 import { v4 } from 'node-uuid';
 
 export const addTodo = (value) => ({
@@ -11,4 +11,10 @@ export const addTodo = (value) => ({
 export const toggleTodo = (id) => ({
   type: TOGGLE_TODO,
   id
+});
+
+export const receiveTodos = (filter, response) => ({
+  type: RECEIVE_TODOS,
+  filter,
+  response
 });
