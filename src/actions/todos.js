@@ -1,6 +1,11 @@
-import { ADD_TODO, TOGGLE_TODO, RECEIVE_TODOS } from '../constants/index';
+import { ADD_TODO, TOGGLE_TODO, RECEIVE_TODOS, REQUEST_TODOS } from '../constants/index';
 import { v4 } from 'node-uuid';
 import * as api from '../api';
+
+export const requestTodos = (filter) => ({
+  type: REQUEST_TODOS,
+  filter
+});
 
 export const addTodo = (value) => ({
   id: v4(),

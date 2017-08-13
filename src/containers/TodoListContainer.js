@@ -2,7 +2,7 @@ import * as actions from '../actions/index';
 import { connect } from 'react-redux';
 import TodoList from '../components/TodoList';
 import { withRouter } from 'react-router-dom';
-import { getVisibleTodos } from '../reducers';
+import { getVisibleTodos, getIsFetching } from '../reducers';
 import PropTypes from 'prop-types';
 
 /* // moved to reducer file
@@ -38,8 +38,10 @@ class VisibleTodoList extends Component {
     //{match: {…}, location: {…}, history: {…}, staticContext: undefined, todos: Array(0), filter...}
     /* after fetching data from database, we need fill it into store,
      this can be achieved only by dispatching an action !!! */
-    const { filter, fetchTodos } = this.props; // * actions from '../actions/index' (mapDispatchToProps: actions)
-    fetchTodos(filter); //dispatch receiveTodos action internally
+    const { filter, requestTodos, fetchTodos } = this.props; // * actions from '../actions/index' (mapDispatchToProps: actions)
+    requestTodos(filter);
+    fetchTodos(filter);
+    //dispatch receiveTodos action internally
     /* Note: here, fetchTodos comes from connect container's actions.
        it's a mapDispatchToProps's shorthand.
        When it gets called, it will dispatch fetchTodos action.
@@ -57,7 +59,6 @@ class VisibleTodoList extends Component {
   }
 
   render() {
-    console.log(this.props);
     /**
       addTodo:ƒ ()
       filter:"completed"
@@ -70,15 +71,21 @@ class VisibleTodoList extends Component {
       todos:[]
       toggleTodo:ƒ ()
      */
-    const { toggleTodo, ...rest } = this.props;
-    return <TodoList {...rest} onClick={toggleTodo} />;
+    const { toggleTodo, todos, isFetching } = this.props;
+    if (isFetching && !todos.length) {
+      return <p>Loading...</p>;
+    }
+    return <TodoList todos={todos} onClick={toggleTodo} />;
   }
 }
 
 VisibleTodoList.propTypes = {
   filter: PropTypes.string.isRequired,
   toggleTodo: PropTypes.func.isRequired,
-  fetchTodos: PropTypes.func.isRequired
+  fetchTodos: PropTypes.func.isRequired,
+  requestTodos: PropTypes.func.isRequired,
+  isFetching: PropTypes.bool.isRequired,
+  todos: PropTypes.array.isRequired
 };
 
 /* If store structure changes, have to remember to update filterTodos(state.todos), not good
@@ -90,6 +97,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     // todos: filterTodos(state.todos, ownProps.filter)  // pass from container
     todos: getVisibleTodos(state, filter), // pass from withRouter
+    isFetching: getIsFetching(state, filter),
     filter
   };
 };
