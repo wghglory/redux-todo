@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const Todo = ({ id, completed, text, onClick }) => {
   return (
-    <li key={id} onClick={() => onClick(id)} style={{ textDecoration: completed ? 'line-through' : 'none' }}>
+    <li onClick={() => onClick(id)} style={{ textDecoration: completed ? 'line-through' : 'none' }}>
       {text}
     </li>
   );

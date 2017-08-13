@@ -23,3 +23,4 @@ npm start
 - [08. withRouter](./docs/08_withRouter.md)
 - [09. Using mapDispatchToProps() Shorthand Notation](./docs/09_mapDispatchToProps_shorthand.md)
 - [10. Colocating Selectors with reducers](./docs/10_selectors.md)
+- [11. Normalizing the State shape](./docs/11_normalize_state_shape.md)
