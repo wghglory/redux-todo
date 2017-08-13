@@ -25,3 +25,4 @@ npm start
 - [10. Colocating Selectors with reducers](./docs/10_selectors.md)
 - [11. Normalizing the State shape](./docs/11_normalize_state_shape.md)
 - [12. Wrapping `dispatch()` to Log Actions](./docs/12_logger.md)
+- [13. Adding a Fake Backend to the project](./docs/13_fake_backend.md)
