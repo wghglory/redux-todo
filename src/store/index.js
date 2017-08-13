@@ -22,6 +22,16 @@ const addLoggingToDispatch = (store) => {
   };
 };
 
+const addPromiseSupportToDispatch = (store) => {
+  const rawDispatch = store.dispatch;
+  return (action) => {
+    if (typeof action.then === 'function') {
+      return action.then(rawDispatch);
+    }
+    return rawDispatch(action);
+  };
+};
+
 const configureStore = () => {
   // const persistedState = loadState();
   const store = createStore(
@@ -36,6 +46,8 @@ const configureStore = () => {
   if (process.env.NODE_ENV !== 'production') {
     store.dispatch = addLoggingToDispatch(store);
   }
+
+  store.dispatch = addPromiseSupportToDispatch(store);
 
   /*   // throttle will make sure saveState won't be called more than 1 second. we don't want this expensive function executes too frequently
   store.subscribe(

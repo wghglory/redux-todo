@@ -22,9 +22,6 @@ const filterTodos = (todos, filter) => {
 
 // add new class because we need fetchTodo Async call
 import React, { Component } from 'react';
-import { fetchTodos } from '../api';
-import { setVisibilityFilter } from '../actions/visibilityFilter';
-import { addTodo } from '../actions/todos';
 
 class VisibleTodoList extends Component {
   componentDidMount() {
@@ -41,8 +38,21 @@ class VisibleTodoList extends Component {
     //{match: {…}, location: {…}, history: {…}, staticContext: undefined, todos: Array(0), filter...}
     /* after fetching data from database, we need fill it into store,
      this can be achieved only by dispatching an action !!! */
-    const { filter, receiveTodos } = this.props;
-    fetchTodos(filter).then((todos) => receiveTodos(filter, todos)); //dispatch receiveTodos action
+    const { filter, fetchTodos } = this.props; // * actions from '../actions/index' (mapDispatchToProps: actions)
+    fetchTodos(filter); //dispatch receiveTodos action internally
+    /* Note: here, fetchTodos comes from connect container's actions.
+       it's a mapDispatchToProps's shorthand.
+       When it gets called, it will dispatch fetchTodos action.
+       Then that action internally calls api to fetch data,
+       Then internally calls receivesTodos action passing the promise.
+
+       const mapDispatchToProps = (dispatch, ownProps) => {
+        return {
+          fetchTodos: (filter) => {
+            dispatch(fetchTodos(filter));
+          }
+        };
+    };*/
     // todo: reducer implementation for receiveTodos
   }
 
@@ -67,8 +77,8 @@ class VisibleTodoList extends Component {
 
 VisibleTodoList.propTypes = {
   filter: PropTypes.string.isRequired,
-  receiveTodos: PropTypes.func.isRequired,
-  toggleTodo: PropTypes.func.isRequired
+  toggleTodo: PropTypes.func.isRequired,
+  fetchTodos: PropTypes.func.isRequired
 };
 
 /* If store structure changes, have to remember to update filterTodos(state.todos), not good

@@ -28,3 +28,4 @@ npm start
 - [13. Adding a Fake Backend to the project](./docs/13_fake_backend.md)
 - [14. Fetching Data on Route Change](./docs/14_fetching_data_on_route_change.md)
 - [15. Dispatching Actions with the Fetched Data](./docs/15_dispatching_actions_when_fetching.md)
+- [16. Wrapping `dispatch()` to Recognize Promises](./docs/16_wrapping_dispatch_to_recognize_promises.md)
