@@ -1,6 +1,7 @@
 import { toggleTodo } from '../actions/index';
 import { connect } from 'react-redux';
 import TodoList from '../components/TodoList';
+import { withRouter } from 'react-router-dom';
 
 const filterTodos = (todos, filter) => {
   switch (filter) {
@@ -17,7 +18,7 @@ const filterTodos = (todos, filter) => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    todos: filterTodos(state.todos, ownProps.filter)
+    todos: filterTodos(state.todos, ownProps.match.params.filter || 'all')
   };
 };
 
@@ -29,4 +30,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TodoList);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(TodoList));

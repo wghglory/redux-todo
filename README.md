@@ -20,3 +20,4 @@ npm start
 - [03. Persisting State in Local Storage](./docs/03_persisting_state_in_local_storage.md)
 - [04. Refactoring the Entry Point](./docs/04_refactoring_entry_point.md)
 - [05-07. react-router-dom v4](./docs/05-07_react-router-dom.md)
+- [08. withRouter](./docs/08_withRouter.md)
