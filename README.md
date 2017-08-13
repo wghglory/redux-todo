@@ -2,6 +2,10 @@
 
 Follow <https://egghead.io/courses/building-react-applications-with-idiomatic-redux>
 
+Include code of second 27 videos at <https://egghead.io/courses/building-react-applications-with-idiomatic-redux>.
+
+Great notes at <https://github.com/tayiorbeii/egghead.io_idiomatic_redux_course_notes>
+
 ## Running Project
 
 ```bash
@@ -9,8 +13,6 @@ npm install
 npm start
 ```
 
-## src
+## Table of Contents
 
-Include code of second 27 videos at <https://egghead.io/courses/building-react-applications-with-idiomatic-redux>.
-
-Great notes at <https://github.com/tayiorbeii/egghead.io_idiomatic_redux_course_notes>
+- [01. Simplifying with the Arrow Functions](./docs/01_arrow_func.md)
