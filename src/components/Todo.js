@@ -10,7 +10,7 @@ const Todo = ({ id, completed, text, onClick }) => {
 };
 
 Todo.propTypes = {
-  id: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
   completed: PropTypes.bool.isRequired,
   text: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired

@@ -1,10 +1,7 @@
 import { toggleTodo } from '../actions/index';
 import { connect } from 'react-redux';
 import TodoList from '../components/TodoList';
-import { withRouter } from 'react-router-dom';
-import { getVisibleTodos } from '../reducers';
 
-/* // moved to reducer file
 const filterTodos = (todos, filter) => {
   switch (filter) {
     case 'all':
@@ -17,24 +14,19 @@ const filterTodos = (todos, filter) => {
       throw new Error('Unknown filter: ' + filter);
   }
 };
-*/
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    // todos: filterTodos(state.todos, ownProps.filter)  // pass from container
-    todos: getVisibleTodos(state, ownProps.match.params.filter || 'all') // pass from withRouter
+    todos: filterTodos(state.todos, state.visibilityFilter)
   };
 };
 
-/* 
-// Only if the arguments of callback and actionCreator are exactly the same, we can use mapDispatchToProps shorthand notation
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onClick: (id) => {
       dispatch(toggleTodo(id));
     }
   };
-}; */
+};
 
-// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(TodoList));
-export default withRouter(connect(mapStateToProps, { onClick: toggleTodo })(TodoList));
+export default connect(mapStateToProps, mapDispatchToProps)(TodoList);
