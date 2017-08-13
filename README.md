@@ -26,3 +26,4 @@ npm start
 - [11. Normalizing the State shape](./docs/11_normalize_state_shape.md)
 - [12. Wrapping `dispatch()` to Log Actions](./docs/12_logger.md)
 - [13. Adding a Fake Backend to the project](./docs/13_fake_backend.md)
+- [14. Fetching Data on Route Change](./docs/14_fetching_data_on_route_change.md)
