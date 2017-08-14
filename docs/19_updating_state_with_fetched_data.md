@@ -22,6 +22,12 @@ export const getVisibleTodos = (state, filter) => {
 };
 ```
 
+Current state:
+
+```json
+todos: { allIds: [1,2,3,4,666...all ids] }
+```
+
 However, this only works correctly if all the data from the server is already available in the client, which is usually not the case with applications that fetch something. If we have thousands of todos on the server, it would be impractical to fetch them all and filter them on the client.
 
 ## Refactoring `getVisibleTodos`
@@ -36,9 +42,27 @@ Instead of reading from `state.allIds`, we will read the IDs from `state.IdsByFi
 
 ```javascript
 export const getVisibleTodos = (state, filter) => {
-  const ids = state.idsByFilter[filter];
-  return ids.map(id => state.byId[id]);
+  const ids = state.idsByFilter[filter];    // get ids by filter
+  return ids.map(id => state.byId[id]);     // get todos for those ids
 };
+```
+
+```json
+todos: {
+  idsByFilter: {
+    'all': [1,2,3,4,5,6],
+    'uncompleted': [1,2,3],
+    'completed': [4,5,6]
+  },
+  byId: {
+    1: {id:1, text:'heel', completed:false},
+    2: {id:2, text:'world', completed:false},
+    3: {id:3, text:'derek', completed:false},
+    4: {id:4, text:'john', completed:true},
+    5: {id:5, text:'mike', completed:true},
+    6: {id:6, text:'susan', completed:true},
+  }
+}
 ```
 
 ## Refactoring `todos`
@@ -65,7 +89,7 @@ const todos = combineReducers({
 });
 ```
 
-### Creating `idsByFilter`
+### Creating `idsByFilter` reducer
 
 `idsByFilter` combines a separate list of `id`s for every filter. So it's `allIds` for the `all` filter, `uncompletedIds` for the `uncompleted` filter, and `completedIDs` for the `completed` filter.
 
@@ -101,7 +125,11 @@ We'll start by renaming `ADD_TODO` to `RECEIVE_TODOS`. In order to handle the `R
 **`allIds` After:**
 
 ```javascript
+// action.response is filtered todos(all todos in this case), we return ids from these todos
 const allIds = (state = [], action) => {
+  if (action.filter !== 'all') {
+    return state;
+  }
   switch (action.type) {
     case 'RECEIVE_TODOS':
       return action.response.map(todo => todo.id);
@@ -116,7 +144,11 @@ const allIds = (state = [], action) => {
 Our `uncompletedIds` reducer will also keep track of an array of `id`s, but only for `todos` on the uncompleted tab. We will need to handle the `RECEIVE_TODOS` action in exactly the same way as the `allIds` reducer before it.
 
 ```javascript
+// action.response is filtered todos(uncompleted todos in this case), we return ids from these todos
 const uncompletedIds = (state = [], action) => {
+  if (action.filter !== 'uncompleted') {
+    return state;
+  }
   switch (action.type) {
     case 'RECEIVE_TODOS':
       return action.response.map(todo => todo.id);
@@ -126,31 +158,16 @@ const uncompletedIds = (state = [], action) => {
 };
 ```
 
-### Updating the Correct Array
-
 Both `uncompletedIds` and `allIds` need to return a new `state` when the `RECEIVE_TODOS` action fires, but we need to have a way of telling which `id` array we should update.
 
 If you recall the `RECEIVE_TODOS` action, you might remember that we passed the `filter` as part of the action. This lets us compare the `filter` inside the action with a `filter` corresponding to the reducer.
 
 The `allIds` reducer is only interested in the actions with the `all` filter, and the `uncompletedIds` is only interested in the `uncompleted` filter.
 
-### `uncompletedIds` Reducer
-
-```javascript
-const uncompletedIds = (state = [], action) => {
-  if (action.filter !== 'uncompleted') {
-    return state;
-  }
-  // rest of code as above
-```
-
-_Repeat for `allIds` but remember to replace `uncompleted` with `all`_
-
 ### Creating the `completedIds` Reducer
 
-This reducer is the same as our other filter reducers, but for the `complete` filter.
-
 ```javascript
+// action.response is filtered todos(completed todos in this case), we return ids from these todos
 const completedIds = (state = [], action) => {
   if (action.filter !== 'completed') {
     return state;
@@ -185,7 +202,7 @@ const byId = (state = {}, action) => {
 };
 ```
 
-We can start by removing the existing `case`s because the data does not live locally anymore. Instead, we will handle the `RECEIVE_TODOS` action just in the other reducers.
+We can start by removing the existing `case`s because the data does not live locally anymore. Instead, we will handle the `RECEIVE_TODOS` action.
 
 Then we'll create `nextState`, a shallow copy of the `state` object which corresponds to the lookup table. We want to iterate through every `todo` object in the `response` and put it into our `nextState`.
 
@@ -198,7 +215,7 @@ Finally, we'll return the next version of the lookup table from our reducer.
 ```javascript
 const byId = (state = {}, action) => {
   switch (action.type) {
-    case 'RECEIVE_TODOS': // eslint-disable-line no-case-declarations
+    case 'RECEIVE_TODOS':
       const nextState = { ...state };
       action.response.forEach(todo => {
         nextState[todo.id] = todo;
@@ -208,6 +225,34 @@ const byId = (state = {}, action) => {
       return state;
   }
 };
+```
+
+Action.response:
+
+```json
+[
+  {id:1, text:'heel', completed:false},
+  {id:2, text:'world', completed:false},
+  {id:3, text:'derek', completed:false}
+]
+```
+
+```json
+todos: {
+  idsByFilter: {
+    'all': [1,2,3,4,5,6],
+    'uncompleted': [1,2,3],
+    'completed': [4,5,6]
+  },
+  byId: {
+    1: {id:1, text:'heel', completed:false},
+    2: {id:2, text:'world', completed:false},
+    3: {id:3, text:'derek', completed:false},
+    4: {id:4, text:'john', completed:true},
+    5: {id:5, text:'mike', completed:true},
+    6: {id:6, text:'susan', completed:true},
+  }
+}
 ```
 
 **Note:** Normally the assignment operation is a mutation. However, in this case it's fine because `nextState` is a shallow copy, and we're only assigning one level deep. Our function stays pure because we're not modifying any of the original state objects.
