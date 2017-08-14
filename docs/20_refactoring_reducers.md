@@ -6,6 +6,8 @@ Earlier, we removed the `visibilityFilter` reducer, and so the root reducer in t
 
 The root reducer file now contains `byId`, `allIds`, `activeIds`, and `completedIDs`. We're going to extract some of them into separate files.
 
+---
+
 Creating a file called `byid.js`, where we paste the code for the `byId` reducer.
 
 Now we'll add a named export for a selector called `getTodo` that takes the `state` and `id`, where the state corresponds to the state of the `byId` reducer. Now going back to `index.js`, we can import the reducer as a default import.
@@ -16,13 +18,13 @@ We can also import any associated selectors in a single object with a namespace 
 import byId, * as fromById from './byid'
 ```
 
-Now if we take a look at the reducers managing the IDs, we will notice that their code is almost exactly the same except for the filter value which they compare `action.filter` to.
+Now if we take a look at the `allIds, completedIds, uncompletedIds` reducers, their code is almost exactly the same except for the filter value which they compare `action.filter` to.
 
 ## Creating `createList`
 
 Let's create a new function called `createList` that takes `filter` as an argument.
 
-`createList` will return another function – a reducer that handles the ids for the specified filter, so its state shape is an array. To save time, we can copy & paste the implementation from `allIds`, and then just change the `'all` literal to `createList`'s `filter` argument, so that we can create it for any filter.
+`createList` will return another function – a reducer that handles the ids for the specified filter, so its state shape is an array.
 
 ```javascript
 const createList = (filter) => {
