@@ -25,7 +25,9 @@ export const getVisibleTodos = (state, filter) => {
 Current state:
 
 ```json
-todos: { allIds: [1,2,3,4,666...all ids] }
+{
+  "todos": { "allIds": [ 1, 2, 3, 4, 666 ] }
+}
 ```
 
 However, this only works correctly if all the data from the server is already available in the client, which is usually not the case with applications that fetch something. If we have thousands of todos on the server, it would be impractical to fetch them all and filter them on the client.
@@ -47,20 +49,24 @@ export const getVisibleTodos = (state, filter) => {
 };
 ```
 
+Store state:
+
 ```json
-todos: {
-  idsByFilter: {
-    'all': [1,2,3,4,5,6],
-    'uncompleted': [1,2,3],
-    'completed': [4,5,6]
-  },
-  byId: {
-    1: {id:1, text:'heel', completed:false},
-    2: {id:2, text:'world', completed:false},
-    3: {id:3, text:'derek', completed:false},
-    4: {id:4, text:'john', completed:true},
-    5: {id:5, text:'mike', completed:true},
-    6: {id:6, text:'susan', completed:true},
+{
+  "todos": {
+    "byId": {
+      "1": { "id": 1, "text": "heel", "completed": false },
+      "2": { "id": 2, "text": "world", "completed": false },
+      "3": { "id": 3, "text": "derek", "completed": false },
+      "4": { "id": 4, "text": "john", "completed": true },
+      "5": { "id": 5, "text": "mike", "completed": true },
+      "6": { "id": 6, "text": "susan", "completed": true }
+    },
+    "idsByFilter": {
+      "all": [ 1, 2, 3, 4, 5, 6 ],
+      "uncompleted": [ 1, 2, 3 ],
+      "completed": [ 4, 5, 6 ]
+    }
   }
 }
 ```
@@ -227,30 +233,79 @@ const byId = (state = {}, action) => {
 };
 ```
 
-Action.response:
+---
+
+## Understanding what happens
+
+Suppose we initially load `localhost/completed`, and our state is like below:
 
 ```json
-[
-  {id:1, text:'heel', completed:false},
-  {id:2, text:'world', completed:false},
-  {id:3, text:'derek', completed:false}
-]
+{
+  "todos": {
+    "byId": {
+      "4": { "id": 4, "text": "john", "completed": true },
+      "5": { "id": 5, "text": "mike", "completed": true },
+      "6": { "id": 6, "text": "susan", "completed": true }
+    },
+    "idsByFilter": {
+      "all": [ 1, 2, 3, 4, 5, 6 ],
+      "uncompleted": [ 1, 2, 3 ],
+      "completed": [ 4, 5, 6 ]
+    }
+  }
+}
 ```
 
+When user clicks `uncompleted` link, we **dispatch a `fetchTodos` action** with filter `uncompleted`:
+
+```javascript
+// actions/todos.js
+const receiveTodos = (filter, response) => ({
+  type: RECEIVE_TODOS,
+  filter,
+  response
+});
+
+export const fetchTodos = (filter) =>
+  api.fetchTodos(filter).then((response) => receiveTodos(filter, response));
+```
+
+When `fetchTodos` action creator gets called, it will call api, return a promise. After the promise is resolved, return a promise object: `{ type: RECEIVE_TODOS, filter, [Promise] }`. So eventually, Clicking `dispatch(fetchTodos(filter))` ==> `dispatch({ type: RECEIVE_TODOS, filter, [Promise] })`. We need a middleware to handle Promise.
+
+fetchTodos api response:
+
 ```json
-todos: {
-  idsByFilter: {
-    'all': [1,2,3,4,5,6],
-    'uncompleted': [1,2,3],
-    'completed': [4,5,6]
-  },
-  byId: {
-    1: {id:1, text:'heel', completed:false},
-    2: {id:2, text:'world', completed:false},
-    3: {id:3, text:'derek', completed:false},
-    4: {id:4, text:'john', completed:true},
-    5: {id:5, text:'mike', completed:true},
-    6: {id:6, text:'susan', completed:true},
+{
+  "1": { "id": 1, "text": "heel", "completed": false },
+  "2": { "id": 2, "text": "world", "completed": false },
+  "3": { "id": 3, "text": "derek", "completed": false },
+}
+```
+
+action:
+
+```json
+{ "type": "RECEIVE_TODOS", "filter": "uncompleted", [Promise] }
+```
+
+New state:
+
+```diff
+{
+  "todos": {
+    "byId": {
++      "1": { "id": 1, "text": "heel", "completed": false },
++      "2": { "id": 2, "text": "world", "completed": false },
++      "3": { "id": 3, "text": "derek", "completed": false },
+      "4": { "id": 4, "text": "john", "completed": true },
+      "5": { "id": 5, "text": "mike", "completed": true },
+      "6": { "id": 6, "text": "susan", "completed": true }
+    },
+    "idsByFilter": {
+      "all": [ 1, 2, 3, 4, 5, 6 ],
+      "uncompleted": [ 1, 2, 3 ],
+      "completed": [ 4, 5, 6 ]
+    }
   }
 }
 ```
