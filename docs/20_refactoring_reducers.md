@@ -6,11 +6,37 @@ Earlier, we removed the `visibilityFilter` reducer, and so the root reducer in t
 
 The root reducer file now contains `byId`, `allIds`, `activeIds`, and `completedIDs`. We're going to extract some of them into separate files.
 
----
-
 Creating a file called `byid.js`, where we paste the code for the `byId` reducer.
 
 Now we'll add a named export for a selector called `getTodo` that takes the `state` and `id`, where the state corresponds to the state of the `byId` reducer. Now going back to `index.js`, we can import the reducer as a default import.
+
+```javascript
+/* state structure for byId
+todos:{
+  byId: {
+    "9329ufdsaf": { id: '9329ufdsaf', text: 'hello', completed: false, },
+    "13213123df": { id: '13213123df', text: 'world', completed: true, },
+    "445524ffad": { id: '445524ffad', text: 'yaya', completed: false, },
+  }
+}
+ */
+const byId = (state = {}, action) => {
+  const nextState = { ...state };
+  switch (action.type) {
+    case RECEIVE_TODOS:
+      action.response.forEach((todo) => {
+        nextState[todo.id] = todo;
+      });
+      return nextState;
+    default:
+      return state;
+  }
+};
+
+export default byId;
+
+export const getTodo = (state, id) => state[id];  // state here is byId. Whoever calls getTodo need pass (state.byId, id)
+```
 
 We can also import any associated selectors in a single object with a namespace import:
 
@@ -18,13 +44,13 @@ We can also import any associated selectors in a single object with a namespace 
 import byId, * as fromById from './byid'
 ```
 
-Now if we take a look at the `allIds, completedIds, uncompletedIds` reducers, their code is almost exactly the same except for the filter value which they compare `action.filter` to.
+Now if we take a look at the reducers managing the IDs, we will notice that their code is almost exactly the same except for the filter value which they compare `action.filter` to.
 
 ## Creating `createList`
 
 Let's create a new function called `createList` that takes `filter` as an argument.
 
-`createList` will return another function – a reducer that handles the ids for the specified filter, so its state shape is an array.
+`createList` will return another function – a reducer that handles the ids for the specified filter, so its state shape is an array. To save time, we can copy & paste the implementation from `allIds`, and then just change the `'all` literal to `createList`'s `filter` argument, so that we can create it for any filter.
 
 ```javascript
 const createList = (filter) => {
@@ -33,13 +59,17 @@ const createList = (filter) => {
       return state;
     }
     switch (action.type) {
-      case 'RECEIVE_TODOS':
-        return action.response.map(todo => todo.id);
+      case RECEIVE_TODOS:
+        return action.response.map((todo) => todo.id);
       default:
         return state;
     }
   };
 };
+
+export default createList;
+
+export const getIds = (state) => state;  // array of ids by filter (i.e. 'uncompleted' filter: [1, 2, 3])
 ```
 
 Now we can remove the `allIds`, `activeIds`, and `completedIds` reducer code completely. Instead, we will generate the reducers using the new `createList` function, and pass the filter as an argument to it.
@@ -50,18 +80,32 @@ Now that it's in a separate file, we will add a public API for accessing the sta
 
 ## Finishing Up
 
-Back in `index.js`, we will import `createList` and any named selectors from this file.
+reducer/index.js:
+
+We will rename `idsByFilter` to `listByFilter` because now that the list implementation is in a separate file, we will use the `getIds` selector that it exports.
 
 ```javascript
+// index.js
+import { combineReducers } from 'redux';
+import byId, * as fromById from './byId';
 import createList, * as fromList from './createList';
-```
 
-We will also rename `idsByFilter` to `listByFilter` because now that the list implementation is in a separate file, we will use the `getIds` selector that it exports.
+const listByFilter = combineReducers({
+  'all': createList('all'),
+  'uncompleted': createList('uncompleted'),
+  'completed': createList('completed')
+});
 
-```javascript
+const todos = combineReducers({
+  byId,
+  listByFilter
+});
+
+export default todos;
+
 export const getVisibleTodos = (state, filter) => {
   const ids = fromList.getIds(state.listByFilter[filter]);
-  return ids.map(id => fromById.getTodo(state.byId, id));
+  return ids.map((id) => fromById.getTodo(state.byId, id));
 };
 ```
 
