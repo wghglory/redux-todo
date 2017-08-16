@@ -34,3 +34,4 @@ npm start
 - [19. Updating the State with the Fetched Data](./docs/19_updating_state_with_fetched_data.md)
 - [20. Refactoring the Reducers](./docs/20_refactoring_reducers.md)
 - [21. Displaying Loading Indicators](./docs/21_displaying_loading_indicator.md)
+- [22. Dispatching Actions Asynchronously with Thunks](./docs/22_dispatching_async_actions_with_thunks.md)

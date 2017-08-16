@@ -28,5 +28,10 @@ const receiveTodos = (filter, response) => ({
 
 // when fetchTodos action creator gets dispatched, it will call api, return a promise instead of a normal object
 // after the promise is resolved, dispatch that resolved action object
-export const fetchTodos = (filter) =>
-  api.fetchTodos(filter).then((response) => receiveTodos(filter, response));
+export const fetchTodos = (filter) => (dispatch) => {
+  dispatch(requestTodos(filter));
+
+  return api.fetchTodos(filter).then((response) => {
+    dispatch(receiveTodos(filter, response));
+  });
+};
