@@ -8,7 +8,7 @@ We will grab `todos` and `isFetching` from `props`. Since `todos` is the only ex
 
 Our `mapStateToProps` function already calculates `visibleTodos` and includes the `todos` in the props. We need to do something similar for `isFetching`. `getIsFetching` accepts the current `state` of the app, and the `filter` for the `todos` being fetched. It is declared alongside other top level selectors in the top level reducer file.
 
-## Inside `VisibleTodoList.js`
+## Inside `TodoListContainer.js`
 
 ```javascript
 render() {
@@ -55,8 +55,47 @@ Before creating our new `getIsFetching` selector, we need to modify the state sh
 Now we can add another selector called `getIsFetching` that reads `state.isFetching`.
 
 ```javascript
+import { RECEIVE_TODOS, REQUEST_TODOS } from '../constants/index';
+
+import { combineReducers } from 'redux';
+
+const createList = (filter) => {
+  const ids = (state = [], action) => {
+    if (action.filter !== filter) {
+      return state;
+    }
+    switch (action.type) {
+      case RECEIVE_TODOS:
+        return action.response.map((todo) => todo.id);
+      default:
+        return state;
+    }
+  };
+
+  const isFetching = (state = false, action) => {
+    if (action.filter !== filter) {
+      return state;
+    }
+    switch (action.type) {
+      case REQUEST_TODOS:
+        return true;
+      case RECEIVE_TODOS:
+        return false;
+      default:
+        return state;
+    }
+  };
+
+  return combineReducers({
+    ids,
+    isFetching
+  });
+};
+
+export default createList;
+
 export const getIds = (state) => state.ids;
-export const getIsFetching = state => state.isFetching;
+export const getIsFetching = (state) => state.isFetching;
 ```
 
 We want our reducer to keep track of both of these fields, so  rather than complicate the existing `createList` reducer, we will rename it to `ids`, because it manages just the `id`s.
@@ -110,7 +149,7 @@ export const requestTodos = (filter) => ({
 
 Every exported action creator will be available on the `props` of the `VisibleToDoList` component.
 
-### Updating `fetchData` inside `VisibleToDoList`
+### Updating `fetchData` inside `TodoListContainer`
 
 We can destructure `requestTodos` from the `props`, and call it right before starting the asynchronous `fetchToDos` operation.
 
