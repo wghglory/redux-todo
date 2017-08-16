@@ -38,9 +38,8 @@ class VisibleTodoList extends Component {
     //{match: {…}, location: {…}, history: {…}, staticContext: undefined, todos: Array(0), filter...}
     /* after fetching data from database, we need fill it into store,
      this can be achieved only by dispatching an action !!! */
-    const { filter, requestTodos, fetchTodos } = this.props; // * actions from '../actions/index' (mapDispatchToProps: actions)
-    requestTodos(filter);
-    fetchTodos(filter);
+    const { filter, fetchTodos } = this.props; // * actions from '../actions/index' (mapDispatchToProps: actions)
+    fetchTodos(filter).then(() => console.log('done!'));
     //dispatch receiveTodos action internally
     /* Note: here, fetchTodos comes from connect container's actions.
        it's a mapDispatchToProps's shorthand.

@@ -1,6 +1,7 @@
 import { ADD_TODO, TOGGLE_TODO, RECEIVE_TODOS, REQUEST_TODOS } from '../constants/index';
 import { v4 } from 'node-uuid';
 import * as api from '../api';
+import { getIsFetching } from '../reducers/createList';
 
 export const requestTodos = (filter) => ({
   type: REQUEST_TODOS,
@@ -28,7 +29,10 @@ const receiveTodos = (filter, response) => ({
 
 // when fetchTodos action creator gets dispatched, it will call api, return a promise instead of a normal object
 // after the promise is resolved, dispatch that resolved action object
-export const fetchTodos = (filter) => (dispatch) => {
+export const fetchTodos = (filter) => (dispatch, getState) => {
+  if (getIsFetching(getState(), filter)) {
+    return Promise.resolve();
+  }
   dispatch(requestTodos(filter));
 
   return api.fetchTodos(filter).then((response) => {
