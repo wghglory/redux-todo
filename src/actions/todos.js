@@ -1,12 +1,8 @@
-import { ADD_TODO, TOGGLE_TODO, RECEIVE_TODOS, REQUEST_TODOS } from '../constants/index';
+import { ADD_TODO, TOGGLE_TODO } from '../constants/index';
 import { v4 } from 'node-uuid';
 import * as api from '../api';
 import { getIsFetching } from '../reducers/createList';
 
-export const requestTodos = (filter) => ({
-  type: REQUEST_TODOS,
-  filter
-});
 
 export const addTodo = (value) => ({
   id: v4(),
@@ -20,12 +16,6 @@ export const toggleTodo = (id) => ({
   id
 });
 
-// dispatch this action whose response is a promise
-const receiveTodos = (filter, response) => ({
-  type: RECEIVE_TODOS,
-  filter,
-  response
-});
 
 // when fetchTodos action creator gets dispatched, it will call api, return a promise instead of a normal object
 // after the promise is resolved, dispatch that resolved action object
@@ -33,9 +23,25 @@ export const fetchTodos = (filter) => (dispatch, getState) => {
   if (getIsFetching(getState(), filter)) {
     return Promise.resolve();
   }
-  dispatch(requestTodos(filter));
-
-  return api.fetchTodos(filter).then((response) => {
-    dispatch(receiveTodos(filter, response));
+  dispatch({
+    type: 'FETCH_TODOS_REQUEST',
+    filter
   });
+
+  return api.fetchTodos(filter).then(
+    response => {
+      dispatch({
+        type: 'FETCH_TODOS_SUCCESS',
+        filter,
+        response,
+      });
+    },
+    error => {
+      dispatch({
+        type: 'FETCH_TODOS_FAILURE',
+        filter,
+        message: error.message || 'Something went wrong.',
+      });
+    }
+  );
 };

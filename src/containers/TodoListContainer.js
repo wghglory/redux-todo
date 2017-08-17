@@ -2,8 +2,9 @@ import * as actions from '../actions/index';
 import { connect } from 'react-redux';
 import TodoList from '../components/TodoList';
 import { withRouter } from 'react-router-dom';
-import { getVisibleTodos, getIsFetching } from '../reducers';
+import { getVisibleTodos, getIsFetching, getErrorMessage } from '../reducers';
 import PropTypes from 'prop-types';
+import FetchError from '../components/FetchError';
 
 /* // moved to reducer file
 const filterTodos = (todos, filter) => {
@@ -70,10 +71,20 @@ class VisibleTodoList extends Component {
       todos:[]
       toggleTodo:ƒ ()
      */
-    const { toggleTodo, todos, isFetching } = this.props;
+    const { toggleTodo, todos, isFetching, errorMessage } = this.props;
     if (isFetching && !todos.length) {
       return <p>Loading...</p>;
     }
+
+    if (errorMessage && !todos.length) {
+      return (
+        <FetchError
+          message={errorMessage}
+          onRetry={() => this.fetchData()}
+        />
+      );
+    }
+
     return <TodoList todos={todos} onClick={toggleTodo} />;
   }
 }
@@ -97,6 +108,7 @@ const mapStateToProps = (state, ownProps) => {
     // todos: filterTodos(state.todos, ownProps.filter)  // pass from container
     todos: getVisibleTodos(state, filter), // pass from withRouter
     isFetching: getIsFetching(state, filter),
+    errorMessage: getErrorMessage(state, filter),
     filter
   };
 };
