@@ -1,4 +1,3 @@
-import { RECEIVE_TODOS } from '../constants/index';
 
 /* state structure for byId
 Take 'uncompleted' Action.response for example:
@@ -33,8 +32,8 @@ todos: {
 const byId = (state = {}, action) => {
   const nextState = { ...state };
   switch (action.type) {
-    case RECEIVE_TODOS:
-      action.response.forEach((todo) => {
+    case 'FETCH_TODOS_SUCCESS':    
+      action.response.forEach(todo => {
         nextState[todo.id] = todo;
       });
       return nextState;
@@ -44,6 +43,7 @@ const byId = (state = {}, action) => {
 };
 
 export default byId;
+
 
 // get single todo
 export const getTodo = (state, id) => state[id];

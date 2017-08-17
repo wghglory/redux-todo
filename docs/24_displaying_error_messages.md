@@ -2,7 +2,29 @@
 
 [Video Link](https://egghead.io/lessons/javascript-redux-displaying-error-messages)
 
-Sometimes API requests fail, and we will simulate this by `throw`ing inside the fake API client so that it returns a rejected Promise. If we run the app, the loading indicator gets stuck because the `isFetching` flag get set to `true`, but there is no corresponding `receiveTodos` action to set it back to `false` again.
+Sometimes API requests fail, and we will simulate this by throwing error inside the fake API client so that it returns a rejected Promise. If we run the app, the loading indicator gets stuck because the `isFetching` flag get set to `true`, but there is no corresponding `receiveTodos` action to set it back to `false` again.
+
+**Api/index.js**
+
+```javascript
+export const fetchTodos = (filter) =>
+  delay(500).then(() => {
+    if (Math.random() > 0.5) {
+      throw new Error('Boom!');
+    }
+
+    switch (filter) {
+      case 'all':
+        return fakeDatabase.todos;
+      case 'uncompleted':
+        return fakeDatabase.todos.filter((t) => !t.completed);
+      case 'completed':
+        return fakeDatabase.todos.filter((t) => t.completed);
+      default:
+        throw new Error(`Unknown filter: ${filter}`);
+    }
+  });
+```
 
 ## Fixing It
 
@@ -37,7 +59,7 @@ Since the `fetchTodos` action creator dispatches several actions, we will rename
 
 Our `error` handler will also be passed two additional pieces of data: the `filter` and the `message` that can be read with `error.message` if specified. We will use `'Something went wrong.'` as a fallback.
 
-**Updated `fetchTodos`**
+**Updated `fetchTodos`** Action
 
 ```javascript
 // actions/todos.js
@@ -131,7 +153,7 @@ We need to `import FetchError` inside of `VisibleTodoList`, then update the `ren
 In order to get the error message, we need to destructure it from the `props` of the `VisibleTodoList` component.
 
 ```javascript
-// Inside VisibleTodoList
+// Inside TodoListContainer
 render() {
   const { isFetching, errorMessage, toggleTodo, todos } = this.props;
   ...
@@ -187,6 +209,7 @@ export const getErrorMessage = (state, filter) =>
 Inside `createList.js`, we'll add a new exported selector called `getErrorMessage` that takes the state of the list and returns a property called error message.
 
 ```javascript
+// reducers/index.js
 export const getErrorMessage = (state) => state.errorMessage;
 ```
 
@@ -203,6 +226,7 @@ The `errorMessage` reducer needs to be added to `combineReducers` as well.
 ##### Completed `errorMessage` Reducer
 
 ```javascript
+// reducers/createList.js
 const errorMessage = (state = null, action) => {
     if (filter !== action.filter) {
       return state;

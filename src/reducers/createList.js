@@ -1,15 +1,13 @@
-import { RECEIVE_TODOS, REQUEST_TODOS } from '../constants/index';
-
 import { combineReducers } from 'redux';
 
 const createList = (filter) => {
   const ids = (state = [], action) => {
-    if (action.filter !== filter) {
+    if (action.filter !== filter ) {
       return state;
     }
     switch (action.type) {
-      case RECEIVE_TODOS:
-        return action.response.map((todo) => todo.id);
+      case 'FETCH_TODOS_SUCCESS':
+        return action.response.map(todo => todo.id);
       default:
         return state;
     }

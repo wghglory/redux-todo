@@ -93,9 +93,9 @@ VisibleTodoList.propTypes = {
   filter: PropTypes.string.isRequired,
   toggleTodo: PropTypes.func.isRequired,
   fetchTodos: PropTypes.func.isRequired,
-  requestTodos: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
-  todos: PropTypes.array.isRequired
+  todos: PropTypes.array.isRequired,
+  errorMessage: PropTypes.string
 };
 
 /* If store structure changes, have to remember to update filterTodos(state.todos), not good
