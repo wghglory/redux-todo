@@ -1,4 +1,3 @@
-
 /* state structure for byId
 Take 'uncompleted' Action.response for example:
 
@@ -32,18 +31,22 @@ todos: {
 const byId = (state = {}, action) => {
   const nextState = { ...state };
   switch (action.type) {
-    case 'FETCH_TODOS_SUCCESS':    
-      action.response.forEach(todo => {
+    case 'FETCH_TODOS_SUCCESS':
+      action.response.forEach((todo) => {
         nextState[todo.id] = todo;
       });
       return nextState;
+    case 'ADD_TODO_SUCCESS': // Our new case
+      return {
+        ...state,
+        [action.response.id]: action.response
+      };
     default:
       return state;
   }
 };
 
 export default byId;
-
 
 // get single todo
 export const getTodo = (state, id) => state[id];

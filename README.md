@@ -36,3 +36,4 @@ npm start
 - [21. Displaying Loading Indicators](./docs/21_displaying_loading_indicator.md)
 - [23. Avoiding Race Conditions with Thunks](./docs/23_avoiding_race_conditions_with_thunks.md)
 - [24. Displaying Error Messages](./docs/24_displaying_error_messages.md)
+- [25. Creating Data on the Server](./docs/25_creating_data_on_server.md)
