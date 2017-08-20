@@ -28,7 +28,7 @@ todos: {
 ```
  */
 
-const byId = (state = {}, action) => {
+/*const byId = (state = {}, action) => {
   const nextState = { ...state };
   switch (action.type) {
     case 'FETCH_TODOS_SUCCESS':
@@ -44,6 +44,16 @@ const byId = (state = {}, action) => {
     default:
       return state;
   }
+};*/
+
+const byId = (state = {}, action) => {
+  if (action.response) {
+    return {
+      ...state,
+      ...action.response.entities.todos
+    };
+  }
+  return state;
 };
 
 export default byId;
