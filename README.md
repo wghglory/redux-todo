@@ -38,3 +38,4 @@ npm start
 - [24. Displaying Error Messages](./docs/24_displaying_error_messages.md)
 - [25. Creating Data on the Server](./docs/25_creating_data_on_server.md)
 - [26. Normalizing API Responses with `normalizer`](./docs/26_normalizing_api_with_normalizr.md)
+- [27. Update data on server](./docs/27_toggle_todo_on_server.md)
